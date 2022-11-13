@@ -141,14 +141,14 @@ namespace TesteLabs.Controllers
                     return NotFound($"Nenhuma cidade encontraddo com o ID {id} informado");
                 }
 
-                var enderecos = await _uof.CidadesRepository.GetEstadosCidadesById(id);
+                var enderecos = await _uof.FuncionariosEnderecosRepository.GetAll().ToListAsync();
 
-                if (!enderecos.Where(e => e.EstadoId != null).Any())
+                if (!enderecos.Where(e => e.CidadeId == id).Any())
                 {
                     return StatusCode(StatusCodes.Status405MethodNotAllowed,
                         "Há registros de endereços relacionados a essa cidade. \n" +
                         "Caso queira mesmo excluir a cidade, " +
-                        "favor exclua primeiramente os estados relacionados");
+                        "favor exclua primeiramente os endereços relacionados");
                 }
 
                 var cidadesDto = _mapper.Map<CidadesDto>(cidade);

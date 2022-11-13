@@ -147,10 +147,9 @@ namespace TesteLabs.Controllers
                     return NotFound($"Nenhum país encontraddo com o ID {id} informado");
                 }
 
-                if (_uof.FuncionariosRepository.GetFuncionarioEnderecosById(id)
-                                               .Select(c => c.Enderecos)
-                                               .ToList()
-                                               .Count == 0)
+                if (_uof.FuncionariosEnderecosRepository.GetAll()
+                                                        .Where(e => e.FuncionarioId == id)
+                                                        .Any())
                 {
                     return StatusCode(StatusCodes.Status405MethodNotAllowed,
                         "Há registros de endereços relacionados a esse funcionário. \n" +

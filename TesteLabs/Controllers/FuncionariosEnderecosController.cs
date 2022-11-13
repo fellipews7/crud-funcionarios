@@ -127,7 +127,7 @@ namespace TesteLabs.Controllers
                 }
 
                 var funcionarios = await _uof.FuncionariosEnderecosRepository
-                                             .GetEnderecoCompletoById(id);
+                                             .GetAll().ToListAsync();
 
                 if (funcionarios.Where(f => f.FuncionarioId == id).Any())
                 {

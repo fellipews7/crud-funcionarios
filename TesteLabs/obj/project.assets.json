@@ -9907,11 +9907,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lipew\\OneDrive\\Área de Trabalho\\Univille\\TesteLabs\\TesteLabs\\TesteLabs.csproj",
+      "projectUniqueName": "C:\\Users\\lipew\\OneDrive\\Área de Trabalho\\Univille\\TesteLabs\\crud-funcionarios\\TesteLabs\\TesteLabs.csproj",
       "projectName": "TesteLabs",
-      "projectPath": "C:\\Users\\lipew\\OneDrive\\Área de Trabalho\\Univille\\TesteLabs\\TesteLabs\\TesteLabs.csproj",
+      "projectPath": "C:\\Users\\lipew\\OneDrive\\Área de Trabalho\\Univille\\TesteLabs\\crud-funcionarios\\TesteLabs\\TesteLabs.csproj",
       "packagesPath": "C:\\Users\\lipew\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lipew\\OneDrive\\Área de Trabalho\\Univille\\TesteLabs\\TesteLabs\\obj\\",
+      "outputPath": "C:\\Users\\lipew\\OneDrive\\Área de Trabalho\\Univille\\TesteLabs\\crud-funcionarios\\TesteLabs\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lipew\\AppData\\Roaming\\NuGet\\NuGet.Config",
