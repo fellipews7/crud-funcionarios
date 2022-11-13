@@ -9,7 +9,7 @@ using TesteLabs.Repository;
 
 namespace TesteLabs.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class PaisesController : ControllerBase
@@ -164,10 +164,9 @@ namespace TesteLabs.Controllers
                     return NotFound($"Nenhum país encontraddo com o ID {id} informado");
                 }
 
-                if (_uof.PaisesRepository.GetPaisEstadosById(id)
-                                         .Select(c => c.Estados)
-                                         .ToList()
-                                         .Count == 0)
+                if (_uof.EstadosRepository.GetAll()
+                                          .Where(e => e.PaisId == id)
+                                          .Any())
                 {
                     return StatusCode(StatusCodes.Status405MethodNotAllowed,
                         "Há registros de estados relacionados a esse país. \n" +

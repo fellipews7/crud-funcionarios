@@ -121,10 +121,9 @@ namespace TesteLabs.Controllers
                     return NotFound($"Nenhum estado encontraddo com o ID {id} informado");
                 }
 
-                if (_uof.EstadosRepository.GetEstadosCidadesById(id)
-                                          .Select(c => c.Cidades)
-                                          .ToList()
-                                          .Count == 0
+                if (_uof.CidadesRepository.GetAll()
+                                          .Where(c => c.EstadoId == id)
+                                          .Any()
                                           )
                 {
                     return StatusCode(StatusCodes.Status405MethodNotAllowed,
