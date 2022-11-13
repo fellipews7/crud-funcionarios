@@ -9,7 +9,7 @@ using TesteLabs.Repository;
 
 namespace TesteLabs.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class PaisesController : ControllerBase
