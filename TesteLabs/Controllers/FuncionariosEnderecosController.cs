@@ -9,7 +9,7 @@ using TesteLabs.Repository;
 
 namespace TesteLabs.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class FuncionariosEnderecosController : ControllerBase
@@ -75,6 +75,18 @@ namespace TesteLabs.Controllers
                     return BadRequest("Dados inválidos");
                 }
 
+                var isEnderecoPrincipal = _uof.FuncionariosEnderecosRepository.GetAll()
+                                              .Where(f => f.FuncionarioId == funcionariosEnderecos.FuncionarioId &&
+                                                          f.EnderecoPrincipal == true)
+                                              .Any();
+
+                if(isEnderecoPrincipal)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden,
+                                        "Já existe um endereço principal cadastrado para esse funcionário"
+                        );
+                }
+
                 _uof.FuncionariosEnderecosRepository.Add(funcionariosEnderecos);
                 await _uof.Commit();
 
@@ -99,6 +111,18 @@ namespace TesteLabs.Controllers
                 {
                     return BadRequest("Dados inválidos");
                 }
+
+                var isEnderecoPrincipal = _uof.FuncionariosEnderecosRepository.GetAll()
+                                              .Where(f => f.FuncionarioId == funcionariosEnderecos.FuncionarioId &&
+                                                          f.EnderecoPrincipal == true)
+                                              .Any();
+                if (isEnderecoPrincipal)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden,
+                                        "Já existe um endereço principal cadastrado para esse funcionário"
+                        );
+                }
+
 
                 _uof.FuncionariosEnderecosRepository.Update(funcionariosEnderecos);
                 await _uof.Commit();
