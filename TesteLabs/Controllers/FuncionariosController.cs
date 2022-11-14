@@ -8,7 +8,7 @@ using TesteLabs.DTOs;
 
 namespace TesteLabs.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class FuncionariosController : ControllerBase
@@ -87,7 +87,7 @@ namespace TesteLabs.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Funcionarios funcionario)
+        public async Task<ActionResult> Post(Funcionarios funcionario)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace TesteLabs.Controllers
                 }
 
                 _uof.FuncionariosRepository.Add(funcionario);
-                _uof.Commit();
+                await _uof.Commit();
 
                 var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
 
@@ -111,8 +111,36 @@ namespace TesteLabs.Controllers
             }
         }
 
+        [HttpPost("{id:int}/UploadImage")]
+        public async Task<ActionResult> UploadImage(int id, FileUpload fileUpload)
+        {
+            var funcionario = await _uof.FuncionariosRepository.GetById(f => f.Id == id);
+            
+            
+            if(funcionario == null)
+            {
+                return NotFound($"Nenhum funcionário encontrado com o ID {id}");
+            }
+            
+
+            using (var ms = new MemoryStream())
+            {
+                fileUpload.file.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                funcionario.Imagem = fileBytes;
+            }
+
+            _uof.FuncionariosRepository.Update(funcionario);
+            await _uof.Commit();
+
+            var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
+
+            return Ok(funcionariosDto);
+
+        }
+
         [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Funcionarios funcionario)
+        public async Task<ActionResult> Put(int id, Funcionarios funcionario)
         {
             try
             {
@@ -122,7 +150,7 @@ namespace TesteLabs.Controllers
                 }
 
                 _uof.FuncionariosRepository.Update(funcionario);
-                _uof.Commit();
+                await _uof.Commit();
 
                 var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
 

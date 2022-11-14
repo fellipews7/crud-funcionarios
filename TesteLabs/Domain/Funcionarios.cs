@@ -23,6 +23,7 @@ namespace TesteLabs.Domain
 		public string Email { get; set; }
 		[Required, StringLength(15)]
 		public string Telefone { get; set; }
+		public byte[]? Imagem { get; set; }
         public ICollection<FuncionariosEnderecos>? Enderecos { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

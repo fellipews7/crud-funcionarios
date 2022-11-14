@@ -11,6 +11,7 @@ namespace TesteLabs.DTOs
         public IdentificadorPessoa TipoPessoa { get; set; }
         public string Email { get; set; }
         public string Telefone { get; set; }
+        public byte[]? Imagem { get; set; }
         public ICollection<FuncionariosEnderecosDto>? Enderecos { get; set; }
 
     }
