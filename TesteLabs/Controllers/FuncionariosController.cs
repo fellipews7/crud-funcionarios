@@ -16,7 +16,7 @@ namespace TesteLabs.Controllers
     {
         public readonly IUnitOfWork _uof;
         private readonly IMapper _mapper;
-        public FuncionariosController(IUnitOfWork uof, IMapper mapper1, IWebHostEnvironment webHostEnvironment)
+        public FuncionariosController(IUnitOfWork uof, IMapper mapper1)
         {
             _uof = uof;
             _mapper = mapper1;
