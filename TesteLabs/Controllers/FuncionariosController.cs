@@ -5,18 +5,18 @@ using TesteLabs.Repository;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using TesteLabs.DTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace TesteLabs.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class FuncionariosController : ControllerBase
     {
         public readonly IUnitOfWork _uof;
         private readonly IMapper _mapper;
-
-        public FuncionariosController(IUnitOfWork uof, IMapper mapper1)
+        public FuncionariosController(IUnitOfWork uof, IMapper mapper1, IWebHostEnvironment webHostEnvironment)
         {
             _uof = uof;
             _mapper = mapper1;
@@ -112,30 +112,33 @@ namespace TesteLabs.Controllers
         }
 
         [HttpPost("{id:int}/UploadImage")]
-        public async Task<ActionResult> UploadImage(int id, FileUpload fileUpload)
+        public async Task<ActionResult> UploadImage(int id, IFormFile fileUpload)
         {
-            var funcionario = await _uof.FuncionariosRepository.GetById(f => f.Id == id);
             
+            var funcionario = await _uof.FuncionariosRepository.GetById(f => f.Id == id);
+            string directoryPath = @"C:\temp";
             
             if(funcionario == null)
             {
                 return NotFound($"Nenhum funcionário encontrado com o ID {id}");
             }
-            
 
-            using (var ms = new MemoryStream())
+            string filePath = Path.Combine(directoryPath, fileUpload.FileName);
+
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                fileUpload.file.CopyTo(ms);
-                var fileBytes = ms.ToArray();
-                funcionario.Imagem = fileBytes;
+                
+                BinaryReader reader = new BinaryReader(fs);
+                long numBytes = new FileInfo(filePath).Length;
+                funcionario.Imagem = reader.ReadBytes((int)numBytes);
+
+                _uof.FuncionariosRepository.Update(funcionario);
+                await _uof.Commit();
+
+                var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
+
+                return Ok(funcionariosDto);
             }
-
-            _uof.FuncionariosRepository.Update(funcionario);
-            await _uof.Commit();
-
-            var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
-
-            return Ok(funcionariosDto);
 
         }
 
