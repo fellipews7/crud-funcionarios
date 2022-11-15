@@ -123,6 +123,11 @@ namespace TesteLabs.Controllers
                 return NotFound($"Nenhum funcionário encontrado com o ID {id}");
             }
 
+            if(Path.GetExtension(fileUpload.FileName).ToLower() != ".png" || Path.GetExtension(fileUpload.FileName).ToLower() != ".png")
+            {
+                return BadRequest("Formato de imagem enviado é inválido!");
+            }
+
             string filePath = Path.Combine(directoryPath, fileUpload.FileName);
 
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
