@@ -8,6 +8,8 @@ using System.Text;
 using TesteLabs.Data;
 using TesteLabs.DTOs.Mappings;
 using TesteLabs.Repository;
+using TesteLabs.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TesteLabsContext>(options =>
@@ -28,6 +30,8 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IValidate, Validate>();
+builder.Services.AddScoped<IFuncionariosServices, FuncionariosServices>();
 
 var mappingConfig = new MapperConfiguration(mc =>
 {

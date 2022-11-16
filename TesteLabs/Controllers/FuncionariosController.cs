@@ -5,21 +5,24 @@ using TesteLabs.Repository;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using TesteLabs.DTOs;
+using TesteLabs.Services;
 
 namespace TesteLabs.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class FuncionariosController : ControllerBase
     {
-        public readonly IUnitOfWork _uof;
+        private readonly IUnitOfWork _uof;
         private readonly IMapper _mapper;
+        private readonly IFuncionariosServices _funcionariosServices;
 
-        public FuncionariosController(IUnitOfWork uof, IMapper mapper1)
+        public FuncionariosController(IUnitOfWork uof, IMapper mapper1, IFuncionariosServices funcionariosServices)
         {
             _uof = uof;
             _mapper = mapper1;
+            _funcionariosServices = funcionariosServices;
         }
 
         [HttpGet]
@@ -96,6 +99,8 @@ namespace TesteLabs.Controllers
                     return BadRequest("Dados inválidos");
                 }
 
+                _funcionariosServices.ValidaFuncionarios(funcionario);
+
                 _uof.FuncionariosRepository.Add(funcionario);
                 _uof.Commit();
 
@@ -103,6 +108,10 @@ namespace TesteLabs.Controllers
 
                 return new CreatedAtRouteResult("ObterFuncionarios",
                     new { id = funcionariosDto.Id }, funcionariosDto);
+            }
+            catch (DomainException erro)
+            {
+                return BadRequest(erro);
             }
             catch (Exception)
             {
