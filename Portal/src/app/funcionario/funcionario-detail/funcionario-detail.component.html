@@ -1,0 +1,36 @@
+<div class="row">
+  <button class="btn btn-outline-info" (click)="novo()">Novo Funcionário</button>
+</div>
+<br>
+<table class="table table-hover table-sm">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nome</th>
+      <th>Idade</th>      
+      <th>Documento Federal</th>
+      <th>Tipo Pessoa</th>
+      <th>Email</th>
+      <th>Telefone</th>
+      <th>Cargo</th>
+      <th class="text-center">Excluir</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let recursoFuncionario of recursosFuncionario">
+      <th scope="row">{{ recursoFuncionario.Id }}</th>
+      <td>{{ recursoFuncionario.Nome }}</td>
+      <td>{{ recursoFuncionario.Idade }}</td>      
+      <td>{{ recursoFuncionario.DocFedereal }}</td>      
+      <td>{{ recursoFuncionario.TipoPessoa }}</td>      
+      <td>{{ recursoFuncionario.Email }}</td>      
+      <td>{{ recursoFuncionario.Telefone }}</td>      
+      <td>{{ recursoFuncionario.Cargos }}</td>      
+      <td class="text-center">
+        <a href="/funcionario" (click)="delete(recursoFuncionario)">
+          <i class="material-icons">delete</i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

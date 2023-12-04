@@ -1,0 +1,36 @@
+<div class="row">
+  <button class="btn btn-outline-info" (click)="novo()">Novo</button>
+</div>
+<br>
+<table class="table table-hover table-sm">
+  <thead>
+   <tr>
+      <th>#</th>
+      <th>Nome</th>
+      <th>Idade</th>      
+      <th>Documento Federal</th>
+      <th>Tipo Pessoa</th>
+      <th>Email</th>
+      <th>Telefone</th>
+      <th>Cargo</th>
+      <th class="text-center">Excluir</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let funcionario of funcionarios">
+      <th scope="row">{{ funcionario.Id }}</th>
+      <td>{{ funcionario.nome }}</td>
+      <td>{{ funcionario.idade }}</td>      
+      <td>{{ funcionario.docFedereal }}</td>      
+      <td>{{ funcionario.tipoPessoa }}</td>      
+      <td>{{ funcionario.email }}</td>      
+      <td>{{ funcionario.telefone }}</td>      
+      <td>{{ funcionario.cargos }}</td>      
+      <td class="text-center">
+        <a href="/funcionario" (click)="delete(funcionario)">
+          <i class="material-icons">delete</i>
+        </a>
+      </td>
+    </tr>  
+  </tbody>
+</table>

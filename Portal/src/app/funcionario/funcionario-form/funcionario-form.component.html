@@ -1,0 +1,53 @@
+<form #f="ngForm" (ngSubmit)="save(f)">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="inputData">Nome</label>
+        <input class="form-control" type="text" bsDatepicker #Data="ngModel" name="Nome" id="inputNome" [(ngModel)]="funcionario.Nome">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="inputData">Idade</label>
+        <input class="form-control" type="number" bsDatepicker #Data="ngModel" name="Data" id="inputIdade" [(ngModel)]="funcionario.Idade">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="inputData">Doc</label>
+        <input class="form-control" type="text" bsDatepicker #Data="ngModel" name="DocFederal" id="inputDocFederal" [(ngModel)]="funcionario.DocFederal">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="inputData">Email</label>
+        <input class="form-control" type="text" bsDatepicker #Data="ngModel" name="Email" id="inputEmail" [(ngModel)]="funcionario.Email">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="inputData">Telefone</label>
+        <input class="form-control" type="text" bsDatepicker #Data="ngModel" name="Telefone" id="inputTelefone" [(ngModel)]="funcionario.Telefone">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label>Cargo</label>
+        <select #selectOption class="form-control" required [(ngModel)]="funcionarioCargo.CargoId" name="CargoId">
+            <option *ngFor="let cargo of cargos" [ngValue]="cargo.id" > {{ cargo.nome }} </option>
+         </select>
+      </div>
+    </div>
+    <div>
+      <div class="form-group">
+        <label for="inputSalario">Salário</label>
+        <input type="number" class="form-control" #Data="ngModel" name="inputSalario" id="inputSalario" [(ngModel)]="funcionarioCargo.Salario">
+      </div>
+    </div>
+  </div>
+  <div>
+    <button class="btn btn-outline-info">Salvar</button>
+    <button class="btn btn-outline-danger" (click)="cancel()">Cancelar</button>
+  </div>
+  <!--app-form-debug [form]="f" [model]="funcionario"></app-form-debug-->
+</form>

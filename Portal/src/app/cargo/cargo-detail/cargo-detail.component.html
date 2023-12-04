@@ -1,0 +1,28 @@
+<div class="row">
+  <button class="btn btn-outline-info" (click)="novo()">Novo Cargo</button>
+</div>
+<br>
+<table class="table table-hover table-sm">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nome</th>
+      <th>Salario</th>      
+      <th>Nível Cargo</th>      
+      <th class="text-center">Excluir</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let recursoCargo of recursosCargo">
+      <th scope="row">{{ recursoCargo.Id }}</th>
+      <td>{{ recursoCargo.Nome }}</td>
+      <td>{{ recursoCargo.Salario }}</td>      
+      <td>{{ recursoCargo.NivelCargo }}</td>      
+      <td class="text-center">
+        <a href="/cargo" (click)="delete(recursoCargo)">
+          <i class="material-icons">delete</i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

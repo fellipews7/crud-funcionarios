@@ -1,18 +1,21 @@
 ﻿using AutoMapper;
+using Data.Data;
+using Data.Repository;
+using Domain.DTOs.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using TesteLabs.Data;
-using TesteLabs.DTOs.Mappings;
-using TesteLabs.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.Services.AddDbContext<TesteLabsContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("TesteLabsContext") ?? 
+//                        throw new InvalidOperationException("Connection string 'TesteLabsContext' not found.")));
+
 builder.Services.AddDbContext<TesteLabsContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TesteLabsContext") ?? 
-                        throw new InvalidOperationException("Connection string 'TesteLabsContext' not found.")));
+    options.UseSqlServer("Data Source=LAPTOP-D77KNA5N\\LIPEW;Initial Catalog=TrabalhoFuncionarios;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;MultipleActiveResultSets=true"));
 
 // Add services to the container.
 
@@ -26,6 +29,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin", builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyHeader();
+        builder.AllowAnyMethod();
+    });
+});
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -37,28 +49,11 @@ var mappingConfig = new MapperConfiguration(mc =>
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-       .AddEntityFrameworkStores<TesteLabsContext>()
-       .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(
-        JwtBearerDefaults.AuthenticationScheme).
-        AddJwtBearer(options =>
-            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidAudience = builder.Configuration["TokenConfiguration:Audience"],
-                ValidIssuer = builder.Configuration["TokenConfiguration:Issuer"],
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
-                                    )
-            }
-    );
 
 var app = builder.Build();
+
+// Configure
+app.UseCors("AllowAnyOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -68,8 +63,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

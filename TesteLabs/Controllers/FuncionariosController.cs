@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Data.Repository;
+using Domain.DTOs;
+using Domain.Model;
 using Microsoft.AspNetCore.Mvc;
-using TesteLabs.Domain;
-using TesteLabs.Repository;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using TesteLabs.DTOs;
 
 namespace TesteLabs.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    [Route("api/[controller]")]
+    [Route("api/funcionario")]
     [ApiController]
     public class FuncionariosController : ControllerBase
     {
@@ -23,12 +21,12 @@ namespace TesteLabs.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FuncionariosDto>>> Get()
+        public async Task<ActionResult<IEnumerable<FuncionarioDto>>> Get()
         {
             try
             {
-                var funcionarios = await _uof.FuncionariosRepository.GetFuncionariosEnderecos().ToListAsync();
-                var funcionariosDto = _mapper.Map<List<FuncionariosDto>>(funcionarios);
+                var funcionarios = await _uof.FuncionariosRepository.GetFuncionariosCargo().ToListAsync();
+                var funcionariosDto = _mapper.Map<List<FuncionarioDto>>(funcionarios);
                 return Ok(funcionariosDto);
             }
             catch (Exception)
@@ -39,7 +37,7 @@ namespace TesteLabs.Controllers
         }
 
         [HttpGet("{id = int}", Name = "ObterFuncionarios")]
-        public async Task<ActionResult<FuncionariosDto>> GetById(int id)
+        public async Task<ActionResult<FuncionarioDto>> GetById(int id)
         {
             try
             {
@@ -50,32 +48,7 @@ namespace TesteLabs.Controllers
                     return NotFound($"Nenhum funcionário encontrado com o ID {id} informado");
                 }
 
-                var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
-
-                return funcionariosDto;
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro desconhecido");
-            }
-        }
-
-        [HttpGet("Endereco/{id = int}")]
-        public async Task<ActionResult<IEnumerable<FuncionariosDto>>> GetFuncionariosEnderecosById(int id)
-        {
-            try
-            {
-                var funcionarios = await _uof.FuncionariosRepository
-                                        .GetFuncionarioEnderecosById(id)
-                                        .ToListAsync();
-
-                if(funcionarios.Count == 0)
-                {
-                    return NotFound($"Nenhum registro encontrado para o ID {id} fornecido");
-                }
-
-                var funcionariosDto = _mapper.Map<List<FuncionariosDto>>(funcionarios);
+                var funcionariosDto = _mapper.Map<FuncionarioDto>(funcionario);
 
                 return funcionariosDto;
             }
@@ -87,7 +60,7 @@ namespace TesteLabs.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Funcionarios funcionario)
+        public async Task<ActionResult> Post(FuncionarioDto funcionario)
         {
             try
             {
@@ -96,10 +69,13 @@ namespace TesteLabs.Controllers
                     return BadRequest("Dados inválidos");
                 }
 
-                _uof.FuncionariosRepository.Add(funcionario);
-                _uof.Commit();
+                var entity = _mapper.Map<Funcionario>(funcionario);
 
-                var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
+                _uof.FuncionariosRepository.Add(entity);
+
+                await _uof.Commit();
+
+                var funcionariosDto = _mapper.Map<FuncionarioDto>(entity);
 
                 return new CreatedAtRouteResult("ObterFuncionarios",
                     new { id = funcionariosDto.Id }, funcionariosDto);
@@ -111,8 +87,35 @@ namespace TesteLabs.Controllers
             }
         }
 
+        [HttpPost("cargo")]
+        public async Task<ActionResult> PostCargo(FuncionarioCargoDto cargo)
+        {
+            try
+            {
+                if(cargo == null)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                var entity = _mapper.Map<FuncionarioCargo>(cargo);
+
+                _uof.FuncionarioCargoRepository.Add(entity);
+                await _uof.Commit();
+
+                var cargoDto = _mapper.Map<FuncionarioCargoDto>(entity);
+
+                return new CreatedAtRouteResult("ObterFuncionarios",
+                    new { id = cargoDto.Id }, cargoDto);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro desconhecido");
+            }
+        }
+
         [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Funcionarios funcionario)
+        public ActionResult Put(int id, Funcionario funcionario)
         {
             try
             {
@@ -124,7 +127,31 @@ namespace TesteLabs.Controllers
                 _uof.FuncionariosRepository.Update(funcionario);
                 _uof.Commit();
 
-                var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
+                var funcionariosDto = _mapper.Map<FuncionarioDto>(funcionario);
+
+                return Ok(funcionariosDto);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um erro desconhecido");
+            }
+        }
+
+        [HttpPut("cargo/{id:int}")]
+        public ActionResult Put(int id, FuncionarioCargo cargo)
+        {
+            try
+            {
+                if (id != cargo.Id)
+                {
+                    return BadRequest("Dados inválidos");
+                }
+
+                _uof.FuncionarioCargoRepository.Update(cargo);
+                _uof.Commit();
+
+                var funcionariosDto = _mapper.Map<FuncionarioDto>(cargo);
 
                 return Ok(funcionariosDto);
             }
@@ -144,26 +171,15 @@ namespace TesteLabs.Controllers
 
                 if(funcionario == null)
                 {
-                    return NotFound($"Nenhum país encontraddo com o ID {id} informado");
-                }
-
-                if (_uof.FuncionariosEnderecosRepository.GetAll()
-                                                        .Where(e => e.FuncionarioId == id)
-                                                        .Any())
-                {
-                    return StatusCode(StatusCodes.Status405MethodNotAllowed,
-                        "Há registros de endereços relacionados a esse funcionário. \n" +
-                        "Caso queira mesmo excluir o funcionário, " +
-                        "favor exclua primeiramente os endereços relacionados");
+                    return NotFound($"Nenhum funcionario encontraddo com o ID {id} informado");
                 }
 
                 _uof.FuncionariosRepository.Delete(funcionario);
                 await _uof.Commit();
 
-                var funcionariosDto = _mapper.Map<FuncionariosDto>(funcionario);
+                var funcionariosDto = _mapper.Map<FuncionarioDto>(funcionario);
 
                 return Ok(funcionariosDto);
-
             }
             catch(Exception)
             {

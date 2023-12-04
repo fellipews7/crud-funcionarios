@@ -1,0 +1,29 @@
+<form #f="ngForm" (ngSubmit)="save(f)">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="inputNome">Nome</label>
+        <input class="form-control" type="text" #Data="ngModel" name="Nome" id="inputNome" [(ngModel)]="Cargo.Nome">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="inputSalario">Salário</label>
+        <input class="form-control" type="number" #Data="ngModel" name="Salario" id="inputSalario" [(ngModel)]="Cargo.Salario">
+      </div>
+    </div>
+    
+    <div class="col">
+      <div class="form-group">
+        <label for="inputNivelCargo">Nivel Cargo</label>
+        <input class="form-control" type="number" #Data="ngModel" name="NivelCargo" id="inputNivelCargo" [(ngModel)]="Cargo.NivelCargo">
+      </div>
+    </div>
+  </div>
+  <br>
+  <div>
+    <button class="btn btn-outline-info">Salvar</button>
+    <button class="btn btn-outline-danger" (click)="cancel()">Cancelar</button>
+  </div>
+  <!--app-form-debug [form]="f" [model]="Cargo"></app-form-debug-->
+</form>

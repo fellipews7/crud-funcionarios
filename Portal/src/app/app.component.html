@@ -1,0 +1,22 @@
+<nav class="container navbar navbar-expand-lg navbar-dark bg-info">
+  <a class="navbar-brand" href="#">Funcionarios</a>
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+    aria-controls="navbarNavDropdown" aria-expanded="true">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown" dropdown>
+        <a dropdownToggle class="nav-link dropdown-toggle text-light" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">Cadastros</a>
+        <div *dropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a routerLink="funcionario" class="dropdown-item">Funcionários</a>
+          <a routerLink="cargo" class="dropdown-item">Cargos</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
